@@ -197,13 +197,13 @@ class ModelSimplifier:
         return model, changes
 
     def _merge_agent_types(self, model: dict) -> tuple[dict, List[str]]:
-        changes = ["Agent type merging not yet implemented - manual simplification needed"]
+        changes = ["Auto-merge of agent types is not yet implemented — reduce agent types manually."]
         return model, changes
 
     def _aggregate_blocks(self, agent: dict) -> tuple[dict, List[str]]:
-        changes = [f"Block aggregation for '{agent.get('name')}' not yet implemented"]
+        changes = [f"Auto-aggregation of blocks for '{agent.get('name')}' is not yet implemented — simplify the block chain manually."]
         return agent, changes
 
     def _apply_sampling(self, model: dict) -> tuple[dict, List[str]]:
-        changes = ["Applied 10:1 sampling to reduce entity count"]
+        changes = ["Auto-sampling to reduce entity count is not yet implemented — lower the arrival rate or simulation duration manually."]
         return model, changes

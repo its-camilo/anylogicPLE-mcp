@@ -164,8 +164,8 @@ Key invariants baked into the generator:
 │   ├── ple_validator.py   # PLE limit checker
 │   └── cloud_client.py    # AnyLogic Cloud upload (optional)
 ├── tests/
-│   ├── test_model_builder.py   # 43 tests — XML structure, parameters, chart correctness
-│   └── test_ple_validator.py   # 5 tests — PLE limit enforcement
+│   ├── test_model_builder.py   # XML structure, parameters, chart correctness
+│   └── test_ple_validator.py   # PLE limit enforcement
 └── pyproject.toml
 ```
 
