@@ -214,3 +214,9 @@ Get a key at: https://cloud.anylogic.com/settings/api-keys
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+## Disclaimer
+
+This project is not affiliated with or endorsed by AnyLogic. AnyLogic is a trademark of The AnyLogic Company. Generated models are subject to AnyLogic PLE's terms of use.
