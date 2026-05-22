@@ -6,6 +6,8 @@ Describe a queueing system, factory, or ER in plain language → get a `.alp` fi
 
 The goal of this project is to shorten the AnyLogic learning curve by giving you a working simulation model as a starting point. Run the simulation, observe the results, study how the model is built, and use it as a reference when building your next model from scratch.
 
+Unlike most tools that focus on a single modeling approach, AnyLogic supports three paradigms in one environment — discrete event, agent-based, and system dynamics — covering virtually any industrial engineering problem you can think of, from factory floors to hospital ERs to supply chains. On top of that, the free PLE edition makes it accessible to anyone learning simulation, and the block-based Process Modeling Library maps naturally to code generation.
+
 > **Disclaimer:** This project is not affiliated with or endorsed by AnyLogic. AnyLogic is a trademark of The AnyLogic Company. Generated models are subject to AnyLogic PLE's terms of use.
 
 ---
