@@ -12,6 +12,14 @@ Unlike most tools that focus on a single modeling approach, AnyLogic supports th
 
 ---
 
+## Who is this for
+
+If you are an industrial engineer, this tool lets you prototype a queuing or process model in natural language and have something running within minutes — skipping the initial friction of block wiring and XML quirks, and getting straight to the questions that matter: utilization rates, bottlenecks, throughput.
+
+The current version handles discrete event / queueing models well. Resource-constrained models (shift schedules, breakdowns, Seize/Release blocks) are not yet supported — that is where contributions are most welcome. Whether you want to add new block types, new templates, or improve the XML generation, your input is genuinely valuable and very much encouraged.
+
+---
+
 ## What it looks like
 
 You type this in Claude Code:
