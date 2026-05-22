@@ -1,4 +1,4 @@
-# anylogic-mcp
+# anylogicPLE-mcp
 
 **MCP server that generates AnyLogic simulation models from natural-language prompts in Claude Code.**
 
