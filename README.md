@@ -4,6 +4,8 @@
 
 Describe a queueing system, factory, or ER in plain language → get a `.alp` file that opens and runs in [AnyLogic PLE](https://www.anylogic.com/downloads/personal-learning-edition-download/) (the free edition). Models are validated automatically against PLE limits.
 
+The goal of this project is to shorten the AnyLogic learning curve by giving you a working simulation model as a starting point. Run the simulation, observe the results, study how the model is built, and use it as a reference when building your next model from scratch.
+
 > **Disclaimer:** This project is not affiliated with or endorsed by AnyLogic. AnyLogic is a trademark of The AnyLogic Company. Generated models are subject to AnyLogic PLE's terms of use.
 
 ---
