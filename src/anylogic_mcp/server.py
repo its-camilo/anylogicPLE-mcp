@@ -735,8 +735,8 @@ Workflow:
   2. anylogic_create_sd_model_ple
   3. anylogic_download_for_ple(model_id=...)
 """
-  response = json.dumps(schema, indent=2) + notes
-  return [TextContent(type="text", text=response)]
+    response = json.dumps(schema, indent=2) + notes
+    return [TextContent(type="text", text=response)]
 
 
 async def create_sd_model_ple(args: dict) -> list[TextContent]:
