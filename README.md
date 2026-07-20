@@ -16,7 +16,7 @@ Unlike most tools that focus on a single modeling approach, AnyLogic supports th
 
 If you are an industrial engineer, this tool lets you prototype a queuing or process model in natural language and have something running within minutes — skipping the initial friction of block wiring and XML quirks, and getting straight to the questions that matter: utilization rates, bottlenecks, throughput.
 
-The current version handles discrete event / queueing models well. Resource-constrained models (shift schedules, breakdowns, Seize/Release blocks) are not yet supported — that is where contributions are most welcome. Whether you want to add new block types, new templates, or improve the XML generation, your input is genuinely valuable and very much encouraged.
+The current version handles **discrete event / queueing models** and **system dynamics models** (stocks, flows, auxiliaries, parameters, table functions, causal links). Resource-constrained DES models (shift schedules, breakdowns, Seize/Release blocks) are not yet supported — that is where contributions are most welcome.
 
 ---
 
@@ -34,6 +34,16 @@ Give me the .alp file.
 ```
 
 Claude calls the MCP tools, builds the `.alp` XML, saves the file to your output folder, and tells you which stage is the bottleneck. Open the file in AnyLogic PLE and click **Run**.
+
+For **System Dynamics**, use the SD tools:
+
+```
+Create the Food Security Malaysia model from Bala et al. Ch. 10.
+Use template food_security_malaysia, 50-year horizon.
+Give me the .alp file.
+```
+
+Claude calls `anylogic_create_sd_model_ple`, validates the schema, and writes a stock-flow `.alp` with TimePlot charts.
 
 ---
 
@@ -98,7 +108,9 @@ What are the AnyLogic PLE limits?
 
 | Tool | What it does |
 |---|---|
-| `anylogic_create_model_ple` | Build and validate a model; returns a model ID |
+| `anylogic_create_model_ple` | Build and validate a DES model; returns a model ID |
+| `anylogic_create_sd_model_ple` | Build and validate a System Dynamics model (explicit schema or template) |
+| `anylogic_get_sd_schema` | Return JSON Schema and usage notes for SD models |
 | `anylogic_download_for_ple` | Write the `.alp` file to `ALP_OUTPUT_DIR` |
 | `anylogic_validate_ple` | Re-check a stored model against PLE limits |
 | `anylogic_get_ple_limits` | Return all PLE restrictions |
@@ -108,6 +120,8 @@ What are the AnyLogic PLE limits?
 
 ## Built-in templates
 
+### Discrete event (DES)
+
 | Template | Entity | Default config | Traffic intensity ρ |
 |---|---|---|---|
 | `warehouse` | Truck | 3 loading docks | 0.75 |
@@ -115,8 +129,16 @@ What are the AnyLogic PLE limits?
 | `factory` | Part | 2 machines in series (A→B) | 0.83 |
 | `hospital` | Patient | triage + 3-doctor treatment | 0.88 |
 
-Custom models (any entity name, any block chain, any parameters) are fully supported.
-See [EXAMPLES.md](EXAMPLES.md) for prompts covering manufacturing, service systems, and healthcare.
+### System dynamics (SD)
+
+| Template | Description |
+|---|---|
+| `predator_prey` | Classic lynx–hare predator-prey model |
+| `simple_stock_flow` | Single-stock inventory with inflow/outflow |
+| `food_security_malaysia` | Rice food security in Malaysia (Bala et al., Ch. 10) |
+
+Custom DES models (any entity name, any block chain) and custom SD models (explicit `sd_model` schema) are fully supported.
+See [EXAMPLES.md](EXAMPLES.md) for prompts covering manufacturing, service systems, healthcare, and system dynamics.
 
 ---
 
@@ -141,7 +163,8 @@ See [EXAMPLES.md](EXAMPLES.md) for prompts covering manufacturing, service syste
 | Agent types | 10 |
 | Blocks per agent | 200 |
 | Dynamic agents | 50,000 |
-| Simulation time | 5 h *(unlimited when using Process Modeling Library — all generated models use it)* |
+| Simulation time | 5 h *(unlimited when using Process Modeling Library — DES models use it; pure SD models do not)* |
+| System dynamics variables | 200 |
 
 ---
 
@@ -155,11 +178,14 @@ See [EXAMPLES.md](EXAMPLES.md) for prompts covering manufacturing, service syste
 
 ## How the XML generation works
 
-`model_builder.py` produces AnyLogic 8.9.8-compatible `.alp` XML. The block ItemNames
-(e.g. Source = `1412336242928`, Queue = `1412336242932`) were extracted from a
-ground-truth AnyLogic file — they must be exact or the model tree crashes on load.
+`model_builder.py` produces AnyLogic 8.9.8-compatible `.alp` XML for **discrete event** models.
+`sd_builder.py` produces the same format for **system dynamics** models (stocks, flows, auxiliaries,
+parameters, table functions, causal links, TimePlot charts).
 
-Key invariants baked into the generator:
+The DES block ItemNames (e.g. Source = `1412336242928`) were extracted from a ground-truth AnyLogic file.
+SD variable XML follows the same dialect as AnyLogic 8.9.x sample models (Cocoa Malaysia, Predator Prey).
+
+Key DES invariants:
 
 - A `Queue` is auto-inserted before every `Delay` to buffer when server capacity is full
 - Queue capacity is set to 100,000 (default in AnyLogic is 100, which causes OOM on long runs)
@@ -174,12 +200,20 @@ Key invariants baked into the generator:
 ```
 ├── src/anylogic_mcp/
 │   ├── server.py          # MCP server and tool handlers
-│   ├── model_builder.py   # .alp XML generator (core logic)
+│   ├── model_builder.py   # DES .alp XML generator
+│   ├── sd_schema.py       # Pydantic schema for SD models
+│   ├── sd_validator.py    # SD semantic validation
+│   ├── sd_builder.py      # SD .alp XML generator
+│   ├── sd_templates.py    # Built-in SD templates
 │   ├── ple_validator.py   # PLE limit checker
 │   └── cloud_client.py    # AnyLogic Cloud upload (optional)
 ├── tests/
-│   ├── test_model_builder.py   # XML structure, parameters, chart correctness
-│   └── test_ple_validator.py   # PLE limit enforcement
+│   ├── test_model_builder.py
+│   ├── test_ple_validator.py
+│   ├── test_sd_schema.py
+│   ├── test_sd_builder.py
+│   ├── test_sd_templates.py
+│   └── test_food_security_malaysia.py
 └── pyproject.toml
 ```
 
