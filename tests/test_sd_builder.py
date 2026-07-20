@@ -59,3 +59,36 @@ class TestSDBuiler:
     def test_build_from_template(self, sd_builder):
         out = xml(sd_builder.build_from_template("predator_prey", {}))
         assert "<![CDATA[Hares]]>" in out
+
+    def test_has_agent_links_matching_connections_id(self, sd_builder):
+        """AnyLogic crashes on open if ConnectionsId has no matching AgentLinks."""
+        import re
+
+        definition = build_template("predator_prey", {})
+        out = xml(sd_builder.build_model(definition))
+        assert "<AgentLinks>" in out
+        assert "<AgentLink>" in out
+        assert "<![CDATA[connections]]>" in out
+
+        conn_match = re.search(r"<ConnectionsId>(\d+)</ConnectionsId>", out)
+        assert conn_match is not None
+        conn_id = conn_match.group(1)
+        # AgentLink Id must equal ConnectionsId
+        assert f"<AgentLink>\n\t\t\t\t\t<Id>{conn_id}</Id>" in out or (
+            f"<Id>{conn_id}</Id>" in out
+            and out.find("<AgentLinks>") < out.find(f"<Id>{conn_id}</Id>")
+        )
+
+    def test_has_converters_applied_outside_model(self, sd_builder):
+        definition = build_template("simple_stock_flow", {})
+        out = xml(sd_builder.build_model(definition))
+        assert "<ConvertersApplied>" in out
+        assert "</Model>" in out
+        assert out.find("</Model>") < out.find("<ConvertersApplied>")
+        assert "<BypassInitialScreen>true</BypassInitialScreen>" in out
+
+    def test_agent_links_before_presentation(self, sd_builder):
+        definition = build_template("food_security_malaysia", {})
+        out = xml(sd_builder.build_model(definition))
+        assert out.find("<TableFunctions>") < out.find("<AgentLinks>")
+        assert out.find("<AgentLinks>") < out.find("<Presentation>")

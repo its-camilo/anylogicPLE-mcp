@@ -6,6 +6,7 @@ import re
 import time
 from typing import Dict, List, Optional, Tuple
 
+from .model_builder import _CONVERTER_UUIDS, _agent_links
 from .sd_schema import (
     AuxDef,
     ChartDef,
@@ -19,12 +20,6 @@ from .sd_schema import (
 )
 
 _CHART_COLORS = [-10496, -6632142, -13434879, -16711936, -16776961]
-
-_CONVERTER_UUIDS = [
-    "9f7858c9-b2c8-4ead-9244-fd08833f642b", "404652e6-561a-404c-aab2-ab7415f40ef5",
-    "6fd6cd57-6dfe-4fc6-be0b-c74065351957", "3325dc48-3ad4-41e3-836f-dfd0e98fe1ed",
-    "bb27038a-0f3a-48bb-b235-4a44066a14aa", "3f69ef3d-706e-41a6-8af0-11658c5eef68",
-]
 
 
 class _IDs:
@@ -524,6 +519,7 @@ class SDModelBuilder:
 {dependences_xml}			</Dependences>
 			<TableFunctions>
 {table_functions_xml}			</TableFunctions>
+{_agent_links(link_conn_id)}
 			<Presentation>
 				<Level>
 					<Id>{main_lvl}</Id>
@@ -630,17 +626,22 @@ class SDModelBuilder:
 				<Title><![CDATA[{definition.name} : Simulation]]></Title>
 				<EnableDeveloperPanel>false</EnableDeveloperPanel>
 				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
-				<ExperimentsSelectionRootPresentation>
-				</ExperimentsSelectionRootPresentation>
+				<RealTimeScale>1.0</RealTimeScale>
 			</PresentationProperties>
+			<ModelTimeProperties>
+				<StopOption><![CDATA[Stop at specified time]]></StopOption>
+				<InitialDate><![CDATA[1592092800000]]></InitialDate>
+				<InitialTime><![CDATA[0.0]]></InitialTime>
+				<FinalDate><![CDATA[1594684800000]]></FinalDate>
+				<FinalTime><![CDATA[{stop_time}]]></FinalTime>
+			</ModelTimeProperties>
+			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>
 	</Experiments>
-	<ModelResources>
-	</ModelResources>
-	<Converters>
-{converters_xml}
-	</Converters>
 </Model>
+<ConvertersApplied>
+{converters_xml}
+</ConvertersApplied>
 </AnyLogicWorkspace>
 """
         return xml.encode("utf-8")

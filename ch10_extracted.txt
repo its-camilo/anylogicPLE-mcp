@@ -1,0 +1,853 @@
+=== PDF PAGE 209 ===
+Modelling of Food Security in Malaysia
+10
+In the previous chapter, a case study on modelling and policy implication of hilsa
+ﬁsh population in Bangladesh has been presented. This chapter presents modelling
+of food security in Malaysia as a case study and application of system dynamics.
+The model is organised as (1) introduction, (2) dynamic hypothesis, (3) causal loop
+diagram, (4) stock–ﬂow diagram, (5) model validation, (6) simulation and policy
+analysis and (7) conclusion. The ﬁndings suggest that gradual transition to
+bio-fertiliser, funding for R&D for development of high-yielding hybrid rice and
+increasing the cropping intensity hold big promise towards productivity enhance-
+ment. The promotion training and extension services using participatory approach
+of learning by doing or the farmer ﬁeld schools are desirable to reduce the
+productivity gap.
+10.1
+Introduction
+Global food security is a serious challenge to the mankind and it has emerged more
+seriously since the food price volatility in 2007–2008. Food security is rising to the
+centre of global discourse and has become an issue of national policy as well as
+public concern. Also, we often ﬁnd food insecurity in the developing countries to
+mention some of the problems of complex and dynamic systems. The food crisis in
+2007–2008 has affected particularly the developing and rice-importing countries in
+Asia. These prompted many South Asian countries to increase the domestic pro-
+duction and hence reduce the imports. The Malaysian government also adopted this
+approach and introduced the national food security policy. Malaysia has translated
+the food security concerns into three-pronged policy objectives and these are to
+ensure high price to paddy farmers to produce rice, to achieve a certain level of self-
+sufﬁciency in rice and to ensure a stable and high quality of rice to the consumers. It
+was perceived that under an open market, producers are susceptible to price
+volatility and consumers are subjected to supply instability in the world market.
+With these premises, the government has insulated the paddy and rice industry by
+# Springer Science+Business Media Singapore 2017
+B.K. Bala et al., System Dynamics, Springer Texts in Business and Economics,
+DOI 10.1007/978-981-10-2045-2_10
+199
+
+=== PDF PAGE 210 ===
+instituting a number of market interventions, from farm to import level. At the farm
+level, farmers are provided with input and cash subsidies and subsidised irrigation
+rates, and the price is guaranteed at the RM 750 per ton (one RM ¼ 0.31 US dollar).
+The import of rice is entrusted to BERNAS, a corporate entity. This is the depth and
+width of the government’s involvement and commitment in ensuring rice security
+to the country.
+The policy objectives have been met as proven by the achievement of the SSL
+(self-sufﬁciency level), farmers received a relatively higher income and consumers
+are insulated from the vagaries of the world market. While these intended outcomes
+are satisfactory, the unintended consequences
+are
+showing
+symptoms
+of
+inefﬁciencies which may contribute partly to the slowing down of the productivity
+growth in the later years. These include heavy input subsidies (petroleum-based
+fertiliser) which result in the reduction of soil fertility and water quality. This in turn
+leads to more usage of this input to replenish the soil and hence continuous
+dependency on the fertiliser. While this strategy is effective in the short term, its
+long-term effect has been proven damaging. The recent increase in petroleum price
+pushes the input cost by more than 70 %. The government has responded to these
+problems by adding more fertiliser subsidies to help farmers with the soil problem
+as well as to cushion the impact of price hikes of inputs. The regional divide
+particularly in productivity between farmers in the granary and non-granary areas
+suggests poor transfer of technology. This is not surprising as the current extension
+system has not moved in parallel to the advancement in farming practices. These
+issues motivate us to explore the potential of R&D (varietal improvement),
+bio-organic fertiliser and new extension methods (ﬁeld farmer schools) in enhanc-
+ing the productivity and production of rice in Malaysia. This in turn helps Malaysia
+to achieve the rice availability which is one of the major pillars of food security.
+Food security is a social sustainability indicator, and the most commonly used
+indicators in the assessment of food security conditions are food production, food
+self- sufﬁciency level, income, total expenditure, food expenditure, share of expen-
+diture of food, calorie consumption, nutritional status, etc. (Riely et al. 1999). These
+studies give a descriptive statistics of the food security. Accounting tools for
+quantifying food security are essential for assessment of food security status and
+also for policy planning for sustainable development. Several studies have been
+reported to identify the determinants of food security at the household level using
+logistic models (Babatunde et al. 2007; Faridi and Wadood 2010; Haile et al. 2005;
+Mahajan and Joshi 2011; Sikwela 2008). Recently, Bala and Hossain (2010, 2013)
+reported a quantitative method of food security and also reported food security at
+regional levels, but this study does not consider subsidies, R&D and extension
+service. Also more recently, Anderson et al. (2013) reported an empirical basis for
+re-examining the effectiveness and efﬁciency of various policy options of ensuring
+food security in Asia and elsewhere.
+Food security is a worldwide problem that has called the attention to
+governments and the scientiﬁc community. It particularly affects developing
+countries. The scientiﬁc community has had increasing concerns for strategic
+understanding and implementation of food security policies in developing
+200
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 211 ===
+countries, especially since the food crisis in the 1970s. The process of decision-
+making is becoming increasingly complex due to the interaction of multiple
+dimensions related to food security (Giraldo et al. 2008).
+Food security is a situation in which people do not live in hunger or fear of
+starvation. FAO (1996a, b) deﬁned the objective of food security as assuring to all
+human beings the physical and economic access to the basic food they need. This
+implies three different aspects: availability, stability and access. Food security
+exists when all people at all times have access to sufﬁcient, safe and nutritional
+food to meet their dietary needs and food preferences for an active and healthy life
+(FAO 2002). Food security includes at a minimum (1) the ready availability of
+nutritionally adequate and safe foods and (2) an assured ability to acquire accept-
+able foods in socially acceptable ways (USDA 1999). The term food security has
+been used over time to mean different things, and it can be a useful measure of
+household and individual welfare, particularly if combined with estimates of
+household food acquisition and allocation behaviour (Per Pinstrup-Anderson 2009).
+Historically, national food self-sufﬁciency has been equated with food security,
+but the deﬁnition could also be expanded to include agricultural self-reliance
+(Panagariya 2002). National food security is achieved when all citizens are individ-
+ually food secure; but this is less straightforward than it appears. Nations often talk
+self-sufﬁciency ratios (the proportion of domestic consumption) as a measure of
+food security. A ratio of 1 or more would imply that the country’s production
+satisﬁes all its food consumption needs. While this may occur for particular
+commodities, it is almost never possible for a country to be fully self-sufﬁcient
+(Majumder et al. 2012).
+In the wake of recent food price spikes and growing demands for food and also
+the growing concerns of climate change impacts in emerging Asia and for biofuels
+in Europe and the United States of America, the governments are re-examining
+their strategies for dealing both short-term and long-term food security, and the
+options include boosting agricultural production rates to deal with long-term
+concerns and using more appropriate domestic policy measures rather than trade
+policy to cope with price volatility (Anderson et al. 2013).
+Considering the above notions of food security and the worst experiences with
+food crisis following the price volatility in 2007 and 2008, understanding the
+impacts of the recent competition between food and biofuel for land and climatic
+change impacts on food production and also realising the central issue of increasing
+local productivity and slowing population growth, Bala et al. (2014) were
+motivated to study the dynamics of food security in Malaysia to understand and
+design policy for increasing local productivity and reducing ﬁeld level productivity
+gaps and address the questions of withdrawal of fertiliser subsidies and gradual
+transition to bio-fertilisers using systems approach. Modelling of food security in
+Malaysia presented here is adopted from Bala et al. (2014).
+10.1
+Introduction
+201
+
+=== PDF PAGE 212 ===
+10.2
+Dynamic Hypothesis
+The dynamic hypothesis is a conceptual model typically consisting of a causal loop
+diagram, stock–ﬂow diagram or their combination which drives the system’s
+behaviour. When the model based on feedback concept is simulated, the endoge-
+nous structure of the model generates the reference mode behaviour of the system
+which results from the endogenous structure of the system. In system dynamics
+modelling, causal loop diagrams and stock–ﬂow diagrams are used to describe the
+basic cause–effect relationships hypothesised to generate the reference mode of the
+behaviour over time (Sterman 2000). Food security can be represented by causal
+loop diagrams and stock–ﬂow diagrams, and the simulation model based on the
+causal loop diagrams and stock–ﬂow diagrams can generate the dynamic behaviour
+of the food security. Rice production and its self-sufﬁciency in the form of causal
+loop diagrams and stock–ﬂow diagrams are hypothesised to generate the observed
+rice production and food security in the reference mode. In essence the decline in
+food security results from both the production and population, and this dynamics
+resulted from the endogenous consequences of the feedback structure.
+10.3
+Causal Loop Diagram
+The causal loop diagram of rice production system in Malaysia is shown in
+Fig. 10.1. Causal loop diagrams identify the principal feedback loops of the
+systems. The causal loop diagrams have been used to describe basic causal
+mechanisms hypothesised to generate the reference mode of behaviour over time
+(Sterman 2000). A feedback loop contains two or more casualty related variables
+that close back on themselves. The relationship between one variable and next in
+the loop can be either positive or negative. A positive relationship means that if one
+increases, the other also increases. In a negative relationship, the two variables
+change inversely. If there are an even numbers of negative relationships in total,
+then the loop is positive; if there are odd numbers of negative relationships, the loop
+is negative. Positive feedback loops generate growth, i.e. re-enforcing, and negative
+feedback loops are goal seeking. There are eight main feedback loops in rice
+production system in Malaysia, of which two are positive, i.e. re-enforcing, and
+six are negative, i.e. goal seeking.
+10.4
+Stock–Flow Diagram
+The ﬂow diagram of the system dynamics model of rice production system in
+Malaysia is shown in Fig. 10.2. Fundamental equations that correspond to major
+state variables shown in Fig. 10.2 are as follows:
+Rice production in Fig. 10.2 depends on rice productivity (tons/ha) as well as on
+the area under rice cultivation and cropping intensity, and it is computed as
+202
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 213 ===
+riceproduction tð Þ ¼ riceproductivity tð Þ  ricearea tð Þ
+ croppingintensity tð Þ
+ð10:1Þ
+The rice area is increased by transfer of land suitable for rice cultivation based on
+development policy of covering the land suitable for rice cultivation within 8 years,
+and also the rice area is decreased by a discard rate of 0.0085 fraction of rice area
+for housing, roads and highways and industries. This is expressed as
+ricearea tð Þ ¼ ricearea t  Δt
+ð
+Þ þ riceareaincreaserate  Δt
+ ricediscardrate  Δt
+ð10:2Þ
+Cropping intensity increases with development policy and programmes and also
+depends on potentiality of multiple crops and crop diversiﬁcation, and it is
+expressed as
+croppingintensity tð Þ ¼ croppingintensity t  Δt
+ð
+Þ
+þ croppingintensityincreaserate  Δt
+ð10:3Þ
+Rice productivity is increased by development of new hybrid varieties of rice
+through research and development and reducing productivity gaps through learning
+through training and extension. In addition, it is affected by agricultural inputs and
+land degradation. This is described as
+Cropping Intensity
+Birth
+Population
+Death
+Land Degradation
+R&D
+Food Security
+Taining and
+Extension
+Productivity
+Subsidies For
+Inputs
+Agricultural Inputs
+from Farmers
+Income
+Rice Production
+Rice Area
+Available Land
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
++
+Fig. 10.1 Causal loop diagram of system dynamics model for rice production system in Malaysia
+10.4
+Stock–Flow Diagram
+203
+
+=== PDF PAGE 214 ===
+riceproductivity tð Þ ¼ riceproductivitypotential tð Þ  productivityfrominput tð Þ
+ riceproductivitymultiplierfromlanddegradation tð Þ
+ productivitymultiplierfromtrainingandextension tð Þ
+ð10:4Þ
+Rice productivity potential is increased by development of new high-yielding/
+hybrid varieties through research and development, and it is expressed as
+riceproductivitypotential tð Þ ¼ riceproductivitypotential t  Δt
+ð
+Þ
+þ productivitynormalincreaserate  Δt
+ð10:5Þ
+rice area
+desired rice area
+rice area increase rate
+implementation factor
+available land
+Development time
+rice discard rate
+rice area discard fraction
+rice productivity
+rice requirement
+population
+population growth
+population growth fraction
+per capita rice consumption
+desired productivity
+rice production
+food self sufficiency ratio
+rice productivity multiplier 
+from land degradation
+degeneration rate
+desired training & extension
+~
+productivity fraction 
+from learning
+bio fertilizers
+rice loss
+poructivity normal 
+increase rate
+learning
+learning increase rate
+time for training 
+and extension
+productivity multiplier from 
+training and extension
+fraction of input bio fertilizer
+training and extension
+training and extension 
+increase rate
+fraction of input by farmers
+govt support decision 
+for land development
+~
+degradation factor
+conversion time
+inputs by farmers
+R & D support decision
+rice productivity potential
+cropping intensity
+cropping intensity
+ increase rate
+bio fert fraction
+desired cropping intensity
+total inputs of fertilizers
+desired inputs
+fund for subsidy
+subsidy rate
+recommmended inputs
+total inputs
+input ratio
+input price
+farmers inputs
+bio growth
+desired bio fraction
+bio time
+~
+learning from extension
+~
+Govt fund for R & D
+productivity normal time
+funding for R & D ratio
+ricepaddy conversion factor
+R & D fund normal
+productivity limit
+regenaration
+~
+regeneration factor
+~
+productivity from input
+cropping intensity 
+implementation time
+Rice sector
+productivity increase 
+from learning
+Fig. 10.2 Flow diagram of the system dynamics model of rice production systems in Malaysia
+204
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 215 ===
+Rice productivity, i.e. yield/ha, is inﬂuenced by land degradation due to cropping
+intensity and can be increased by keeping the land fallow for a long time by
+regeneration, and it is described as a multiplier:
+rice productivity multiplier from land degradation tð Þ ¼ rice productivity multiplier
+from land degradation t  Δt
+ð
+Þ þ regeneration  Δt  degeneration rate  Δt
+ð10:6Þ
+The published research indicates that training and extension through farmer ﬁeld
+schools is having a substantial impact in terms of increase in farm productivity,
+reduction in farmers’ use of pesticides and improved farming knowledge (Davis
+et al. 2012; Larsen and Lilleor 2012; Mwagi et al. 2003; Praneetvatakul and Waibel
+2003; Rola et al. 2002). Rice productivity can also be increased by training and
+extension through farmer ﬁeld schools which provides an opportunity of learning
+by doing for the farmers to reduce the productivity gaps. Farmer ﬁeld school is
+based on experiential learning techniques and participatory methods, and here,
+learning means to work based on experiences and knowledge, and it is run by
+training and extension service department/agency (Bala 2012). The contribution of
+the training and extension reduces the yield gap and it depends on learning. The
+productivity multiplier from training and extension is given by
+productivity multiplier from training and extension tð Þ ¼ productivity multiplier
+from t raining and extension t  Δt
+ð
+Þ þ productivity increase from learning  Δt
+ð10:7Þ
+Productivity multiplier from training and extension is related to learning level
+through multiplier. The growth rate fraction of productivity multiplier from training
+and extension is expressed as a non-linear function of learning level.
+Learning level inﬂuences the productivity and the learning rate depends on the
+training extension activities, and the learning level is expressed as
+learning tð Þ ¼ learning t  Δt
+ð
+Þ þ learning increase rate  Δt
+ð10:8Þ
+Learning from training and extension services increases with the farmers under
+training and extension services. Learning from training and extension is expressed
+as a non-linear function of the farmers under training and extension services.
+The training and extension service provides the knowledge, i.e. learning and the
+coverage of the training, and extension activities are given by
+training and extension tð Þ ¼ t raining and extension t  Δt
+ð
+Þ
+þ training and extension increase rate  Δt ð10:9Þ
+Commercial fertilisers create environmental degradation and also affect the soil
+structure and health. Gradual transition to bio-fertilisers based on a target policy is
+expressed as
+10.4
+Stock–Flow Diagram
+205
+
+=== PDF PAGE 216 ===
+biofertilizerfraction tð Þ ¼ biofertilizerfraction t  Δt
+ð
+Þ
+þ biofertilizergrowth  Δt
+ð10:10Þ
+Rice requirement depends on the per capita consumption of rice and population
+level and it is computed as
+ricerequirement tð Þ ¼ percpitaconsumption tð Þ  population tð Þ
+ð10:11Þ
+Population level at any time t is computed from the population growth rate and it is
+given by:
+population tð Þ ¼ population t  Δt
+ð
+Þ þ populationgrowthrate
+ð10:12Þ
+Self-sufﬁciency level (SSL) of rice is deﬁned as the ratio of rice production to rice
+requirement:
+Self sufficiencyLevel SSL
+ð
+Þ tð Þ ¼ riceproduction tð Þ
+ricerequirement tð Þ
+ð10:13Þ
+SSL above 1 means surplus food and SSL less than 1 means shortage in food supply
+to lead healthy life.
+10.5
+Model Validation
+Initial values and parameters were estimated from the primary and secondary data
+collected from different research reports, statistical year books of Malaysia and
+ﬁeld visits, and these are shown in Table 10.1.
+To build up conﬁdence in the predictions of the model, various ways of
+validating a model such as model structures, comparing the model predictions
+with historic data, checking whether the model generates plausible behaviour and
+Table 10.1 Data on initial values and parameters
+Name of the variable and parameter
+Unit
+Value
+Rice area
+Ha
+680,647
+Available land
+Ha
+88,000
+Conversion time
+Year
+8
+Discard rate
+Per year
+0.0085
+Population
+Million
+18.1024
+Population growth
+Fraction per year
+0.021
+Per capita rice consumption
+Kg per year
+80
+Rice productivity potential
+Tons per ha
+6
+Rice productivity multiplier from land degradation
+Dimensionless
+0.99
+Productivity multiplier from training land extension
+Dimensionless
+0.61
+Bio-fertiliser
+Fraction of total inputs
+0.0
+206
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 217 ===
+checking the quality of the parameter values were considered. Figure 10.3 shows
+the comparison between the predicted and historical behaviour of food self-
+sufﬁciency ratio in Malaysia. The model-simulated food self-sufﬁciency ratio
+agrees reasonably well with historical behaviour and the model is reliable. The
+validated model was used for baseline scenario and policy analysis.
+The parameters of a system dynamics models are subject to uncertainty. So,
+sensitivity analysis is an important task for reliability of the simulated results and
+checking the robustness of the model behaviour for the changes in parameter
+values. The sensitivity of the important parameters was also estimated. The pro-
+ductivity is one of the most important parameters affecting the model behaviour,
+i.e. self-sufﬁciency ratio which is the focus of this study. In this study behaviour,
+sensitivity analysis of food self-sufﬁciency ratio to rice productivity was conducted,
+and Fig. 10.4 shows the changes in food self-sufﬁciency ratio for rice productivity
+for changes of 2.50 t/ha (curve 1), 3.50 t/ha (curve 2) and 4.50 t/ha (curve 3). The
+food self-sufﬁciency ratio changes from decrease to increase in values for the
+changes in the rice productivity from 3.50 t/ha to 2.50 t/ha and 4.50 t/ha, and this
+corresponds with real-world situation.
+10.6
+Simulation and Policy Analysis
+A system dynamics model was developed to address the important policy options of
+rice food security in Malaysia, and the model was simulated to analyse policy issues
+of
+input
+subsidies,
+withdrawal
+of
+input
+subsidies,
+gradual
+transition
+to
+bio-fertilisers, R&D for increased productivity, extension services through farmer
+ﬁeld schools (FFS) and increase in cropping intensity to address how it behaves in
+the long run to achieve self-sufﬁciency level in rice production in Malaysia. The
+Fig. 10.3 Simulated and historical data of food self-sufﬁciency ratio in Malaysia
+10.6
+Simulation and Policy Analysis
+207
+
+=== PDF PAGE 218 ===
+simulated results for these important policy options for a simulation period of
+50 years starting from 2011 are presented and discussed here.
+10.6.1 Subsidies for Agricultural Inputs
+Figure 10.5 shows the simulated available land, rice area, rice production and self-
+sufﬁciency level in rice production for subsidies on agricultural inputs (67 %) and
+population for a simulation period of 50 years. The rice area initially increases till
+about 8 years and reaches the upper limit of available land suitable for rice and then
+decreases it due to the discard of rice area for housing and industrial enterprises.
+This results in the decrease in the rice production to 1.54 million tons at the end of
+the simulation period of 50 years. The self-sufﬁciency in rice decreases to 22 % due
+to the decrease in rice production and increase in the population. This fact implies
+that although subsidies on agricultural inputs have positive effect on productivity,
+only the subsidies on agricultural inputs are not sufﬁcient to improve the SSL in rice
+production in Malaysia at the desired level, and the rice production in Malaysia is
+not sustainable at the desired level in the long run. However, it is good for short run.
+Other opportunities such as hybrid varieties for higher yields and better manage-
+ment practices to reduce the productivity gaps in the ﬁelds through training and
+extension services and increase in cropping intensity are needed to be searched.
+Fig. 10.4 Sensitivity of food self-sufﬁciency ratio to rice productivity (2.50 t/ha, 3.50 t/ha and
+4.50 t/ha)
+208
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 219 ===
+10.6.2 Withdrawal of Input Subsidies
+Figure 10.6 shows the simulated available land, rice area, rice production and self-
+sufﬁciency level in rice production for withdrawal of subsidies on agricultural
+inputs and population for a simulation period of 50 years. The rice production
+and hence the self-sufﬁciency in rice fall drastically as a result of withdrawal of
+subsidies on agricultural inputs. This causes a further decrease in rice production to
+1.33 million tons at the end of the simulation period of 50 years and hence the self-
+sufﬁciency in rice decreases to 19 %, i.e. less than 3 % of the basic as usual in
+Fig. 10.5. Ramli et al. (2012) also reported that the removal of fertiliser subsidy will
+decrease the paddy production and, consequently, decrease the self-sufﬁciency
+level (SSL) in Malaysia. This implies that the withdrawal of subsidies on agricul-
+tural inputs has a negative effect on productivity since rice production in Malaysia
+does not have comparative advantage in terms of the income derived. It is not a wise
+decision to withdraw the subsidies unless an alternative arrangement/mechanism to
+apply optimum level of agricultural inputs such as gradual transition to
+bio-fertilisers as low-cost nutrients to increase the productivity and reduce the
+environmental degradation and introduction of hybrid seeds and better management
+practices to increase the productivity of rice is ensured.
+10.6.3 Gradual Transition to Bio-fertilisers (50 %)
+Figure 10.7 shows the simulated available land, rice area, rice production and self-
+sufﬁciency level in rice production for gradual transition to bio-fertilisers and
+Fig. 10.5 Simulated available land, rice area, rice production and rice self-sufﬁciency level for
+agricultural subsidies in inputs and population
+10.6
+Simulation and Policy Analysis
+209
+
+=== PDF PAGE 220 ===
+population for a simulation period of 50 years. The policy is to withdraw 50 % of the
+subsidy for agricultural inputs immediately and another 50% of the agricultural input,
+i.e. commercial fertiliser is replaced by bio-fertilisers within next 50 years. The rice
+production in this policy increases from 1.33 million tons in the case of withdrawal
+of input subsidies to 1.42 million tons at the end of the simulation period of
+Fig. 10.6 Simulated available land, rice area, rice production and rice self-sufﬁciency level for
+withdrawal of agricultural subsidies in inputs and population
+Fig. 10.7 Simulated available land, rice area, rice production and rice self-sufﬁciency level for
+gradual transition to bio-fertilisers and population
+210
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 221 ===
+50 years, and the rice self-sufﬁciency level settles to 21% from 19% for
+withdrawal of the subsidies. The rice self-sufﬁciency ratio (21 %) is comparable
+with the reference run in Fig. 10.5 which is 22%. Still policy mechanisms are
+needed to increase the productivity which can be achieved through better man-
+agement practices using farmer ﬁeld schools, using hybrid variety and encourag-
+ing the farmers to use bio-fertiliser. Bio-fertilisers are eco-friendly and are
+environmentally safe. They form not only part of integrated nutrients but are of
+low cost which is of immense help to the farming community. This could increase
+the productivity to improve the SSL level and reduce the agricultural input costs
+of fertiliser subsidies. Lakshmi et al. (2012) reported that combined application of
+organics and blue-green algae (BGA) not only recorded higher yield but found to
+emit less methane in paddy cultivation. Application of BGA (blue-green algae)
+and Azolla reduced methane ﬂux without reducing rice yields and can be used as
+a practical mitigation option for minimising the global warming potential of rice
+ecosystem and enhancement by nitrogen ﬁxation.
+10.6.4 Gradual Transition to Bio-fertilisers (50 %) and R&D
+Figure 10.8 shows the simulated available land, rice area, rice production and self-
+sufﬁciency level in rice production for gradual transition to bio-fertilisers, R&D and
+population for a simulation period of 50 years. The R&D is designed to increase the
+potential rice productivity from 6 tons/ha to 12 tons/ha within the simulation period
+of 50 years. The rice production increases to 2.42 million tons and then becomes
+almost constant, but the rice self-sufﬁciency ratio decreases to 35 % due to the
+Fig. 10.8 Simulated available land, rice area, rice production and rice self-sufﬁciency level for
+gradual transition to bio-fertilisers (50 %), R&D and population
+10.6
+Simulation and Policy Analysis
+211
+
+=== PDF PAGE 222 ===
+increasing population at the end of the simulation period of 50 years. Although the
+self-sufﬁciency level decreases, it rises at a much higher level in comparison to all
+the previous runs. Thus, this policy option is superior to the policy option illustrated
+in Fig. 10.7 due to R&D resulting in hybrid rice variety with much higher produc-
+tivity. Anderson et al. (2013) reported that the best long-term option is investing
+more in agricultural R&D, and this has the potential to boost per capita consump-
+tion in both food-exporting and food-importing countries. There is no alternative to
+R&D to sustain the production and improve the SSL in rice production in Malaysia
+(Fatimah et al. 2011). The R&D policy incorporating bio-fertilisers not only
+improves the SSL but also minimises the global warming.
+10.6.5 Gradual Transition to Bio-fertilisers (50 %), R&D
+and Training and Extension Services
+Figure 10.9 shows the simulated available land, rice area, rice production and self-
+sufﬁciency level in rice production for gradual transition to bio-fertilisers, R&D,
+training and extension services and population for a simulation period of 50 years.
+The training and extension services for learning by doing through farmer ﬁeld
+schools are expected to reduce the productivity gap at ﬁeld levels, and these
+services will be provided to all of the farming communities within next 50 years.
+Rice production increases to about 2.99 million tons and the self-sufﬁciency level
+becomes 43 % towards the end of 50 years of the simulation period. This policy
+option further increases the rice production from 2.42 million tons to 2.99 million
+tons and the rice self-sufﬁciency level from 35 to 43 % from the policy illustrated in
+Fig. 10.9 Simulated available land, rice area, rice production and rice self-sufﬁciency level for
+gradual transition to bio-fertilisers (50 %), R&D and training and extension and population
+212
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 223 ===
+Fig. 10.8, and thus it is superior to the policy option illustrated in Fig. 10.8 due to
+incorporation of R&D resulting in higher productivity and training and extension
+services to reduce the productivity gaps in the ﬁelds. There exists a large yield gap
+at the ﬁeld levels in the rice production of Malaysia. Yield gap is manageable and
+can be narrowed down by deploying more efforts in training and extension services
+as well as governments’ appropriate intervention particularly on the institutional
+issues (Duwayri and Tran 2013). Several studies have been reported on the positive
+impacts of agricultural training and extension on agricultural production and food
+security (Bala 2012; Davis et al. 2012; Larsen and Lilleor 2012; Majumder
+et al. 2012).
+10.6.6 Gradual Transition to Bio-fertilisers (50 %), R&D, Training
+and Extension Services and Cropping Intensity (150 %)
+Figure 10.10 shows the simulated available land, rice area, rice production and self-
+sufﬁciency level in rice production for gradual transition to bio-fertilisers, R&D,
+training and extension services, cropping intensity and population for a simulation
+period of 50 years. Cropping intensity is expected to increase from the present level
+to 150 % of the present level. Rice production increases but becomes almost
+stagnant at 4.34 million tons towards the end of 50 years with a self-sufﬁciency
+level of 63 %. This increase of 63 % in rice self-sufﬁciency is due to R&D resulting
+higher productivity, the extension and training services to reduce productivity gaps
+in the ﬁelds and increasing cropping intensity to increase the area under rice crop by
+vertical expansion. The rice production increases from 2.99 million tons to
+Fig. 10.10 Simulated rice production and rice self-sufﬁciency level for gradual transition to
+bio-fertilisers (50 %), R&D, training and extension and cropping intensity and population
+10.6
+Simulation and Policy Analysis
+213
+
+=== PDF PAGE 224 ===
+4.34 million tons, and the food self-sufﬁciency ratio increases from 43 to 63 % from
+the policy options illustrated in Fig. 10.9. This is the best policy although the self-
+sufﬁciency in rice food security in Malaysia still remains a challenge, and Malaysia
+needs imports of rice for domestic food security. BERNAS is solely authorised to
+deal with the imports of rice in Malaysia. A recent study on rice imports in Malaysia
+suggests that rice import largely from Vietnam and Thailand is a weak strategy, and
+an effective multi-sourcing strategy for rice could be adopted to avoid such a weak
+strategy in securing supply from the international market rather than importing
+largely from Vietnam and Thailand (Tey and Radam 2010). However, it can be
+concluded that there is a need of further increase in rice productivity which can be
+realised through R&D developing hybrid variety of much more higher productivity,
+reducing productivity gaps in the ﬁelds and vertical expansion of the cropped area
+through increase in the cropping intensity to meet this challenge.
+10.7
+Conclusions
+In the recent years, there have been increasing interests in policy issues of food
+security since the food crisis in 2007–2008. Malaysia’s main food security concern
+is to achieve a certain level of self-sufﬁciency in rice. In this paper a system
+dynamics model has been developed to simulate rice food security and also to
+assess the policy options of the food security. Simulated results show that subsidy
+liberalisation or withdrawn would worsen SSL. However, gradual transition to
+bio-fertilisers improves SSL, and R&D with training and extension services and
+increased cropping intensity improve the rice food security considerably. Simulated
+results suggest that the best policy to achieve the targeted SSL is through R&D,
+training and extension services using farmer ﬁeld schools and vertical expansion of
+cropped area increasing the cropping intensity. Food self-sufﬁciency in rice in
+Malaysia still remains a challenge. The trade-off could be to increase the real
+income, thereby increasing the purchasing power of the farmers with subsidised
+cereal production for the land suitable for irrigated rice production and highly taxed
+high-value crop production in the rest of the land suitable for crop production under
+bold national food security policy. In conclusion this model can provide better
+understanding and greater insights of the food security issues, and also the results
+indicate that the proposed model can be efﬁciently used for developing policy
+suggestions and for improving decision support to policy makers in food security.
+Exercises
+Exercise 10.1 Deﬁne food security. Discuss the issues of food security in a broad
+perspective.
+Exercise 10.2 Draw the causal loop diagrams of food security based on the FAO
+deﬁnition of food security.
+Exercise 10.3 Draw stock–ﬂow diagram of food security based on the FAO
+deﬁnition of food security and simulate the dynamics of food security.
+214
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 225 ===
+Exercise 10.4 Simulate the model in Exercise 10.3 for different policy options, and
+make a comparative analysis of the simulated results to search for the best policy
+option to ensure the optimal food security.
+Exercise 10.5 Discuss the policy implication of food security. How the policy of
+improving food security can be implemented using participatory approach of
+farmer ﬁeld schools?
+References
+Anderson K, Jha S, Nelgen S, Strutt A (2013) Re-examining policies for food security in Asia.
+Food Secur 5:195–215
+Babatunde RO, Omotesho OA, Sholotan OS (2007) Factors inﬂuencing food security status of
+rural farming households in North Central Nigerian. Agric J 2(3):351–357
+Bala BK (2012) Agricultural development strategy for Hill Tracts of Chittagong. Final report
+UNDP CHTDF, Rangamati, Bangladesh
+Bala BK, Hossain MA (2010) Modeling of food security and ecological footprint of the coastal
+zone of Bangladesh. Environ Dev Sustain 12:511–529
+Bala BK, Hossain MA (2013) Modeling of ecological footprint and climate change impacts on
+food security of the Hill Tracts of Chittagong in Bangladesh. Environ Model Assess 18
+(1):39–55
+Bala BK, Alias EF, Fatimah MA, Noh KM, Hadi AHA (2014) Modeling of food security in
+Malaysia. Simul Model Pract Theory 47:152–164
+Davis K, Nkonya E, Kato E, Mekonnen DA, Odendo M, Mhro R, Nkuba J (2012) Impact of farmer
+ﬁeld schools on agricultural productivity and poverty in East Africa. World Dev 40(2):402–413
+Duwayri M, Tran DV (2013) Reﬂections on yield gaps in rice production: how to narrow the gaps.
+FAO Corporate document repository. Internet. 26.03.2013, 2013
+FAO (Food and Agricultural Organization) (1996a) Implications of economic policy for food
+security: a training manual, Rome.
+FAO (Food and Agricultural Organization) (1996b) Technical background document prepared for
+the World Food Summit, Rome.
+FAO (Food and Agricultural Organization) (2002) The state of food insecurity in the world:
+eradicating world hunger-taking stock ten years after the world food summit, Rome.
+Faridi R, Wadood SN (2010) An econometric assessment of household food security in
+Bangladesh. Bangladesh Dev Stud 33(3):97–111
+Fatimah MA, Emmy FA, Tasrif M (2011) Food security: self-sufﬁciency of rice in Malaysia. Int J
+Manag Sci 18(2):83–100
+Giraldo DP, Betancur MJ, Arango S (2008) Food security in developing countries: a systemic
+perspective. Paper presented at the international conference of the System Dynamics Society
+held on July 20–24 2008 at Athens, Greece
+Haile HK, Alemu ZG, Kudhlande G (2005) Causes of household food insecurity in Koredegaga
+Peasant Association, Oromiya Zone, Ethiopia. Working paper, University of the Free State,
+Department of Agricultural Economics
+Lakshmi VG, Lakshmanan A, Sankar A, Latha P, Sekher NU (2012) Biofertilizers in minimizing
+climate change impacts in rice farming CLIMARICE: sustaining the rice production in a
+changing climate uncertainties and validating selected adaptation techniques on farmer’s
+ﬁeld. CLIMARICE technical Brief 9, August, 2012
+Larsen AF, Lilleor HB (2012) The impact of farmer ﬁeld schools on food security and poverty:
+evidence from a quasi-experiment in Tanzania. Online in the internet, 2012.
+Mahajan K, Joshi N (2011) Determinants of household food security in Nepal: a binary logistic
+regression. J Mt Sci 8:403–413
+References
+215
+
+=== PDF PAGE 226 ===
+Majumder S, Bala BK, Hossain MA (2012) Food security of the Hill Tracts of Chittagong in
+Bangladesh. J Nat Resour Policy Res 4(1):43–60
+Mwagi GO, Onyango CA, Mureithi JG, Mungai PC (2003) Effectiveness of FFS approach on
+technology adoption and empowerment of farmers: A case of farmer groups in Kisii District,
+Kenya. The Soil Science Society of East Africa: proceedings of the 21st annual conference,
+1–5 December 2003, Eldoret, Kenya, 2003
+Panagariya A (2002) Trade and food security: conceptualizing the linkages. In: Proceedings of the
+conference on trade, agricultural development and food security: the impacts recent economic
+and trade policy reform. 11–12 July 2002, Rome, 2002
+Pinstrup-Anderson P (2009) Food security: deﬁnition and measurement. Food Secur 1:5–7
+Praneetvatakul S, Waibel H (2003) Farm-level economic analysis of farmer ﬁeldschools in
+Thailand. Poster and background paper presented at 25th International Conference of Agricul-
+tural Economists, Durban, South Africa. Italy, FAO, 2003
+Ramli NN, Shamsudin MN, Mohammed Z, Radam A (2012) Impacts of fertilizer subsidy on
+Malaysian paddy/rice industry using system dynamics approach. Int J Soc Sci Hum 2
+(2):213–219
+Riely F, Mock N, Cogill B, Bailey L, Keneﬁck E (1999) Food security indicators and framework
+for use in the monitoring and evaluation of food aid programs, Food and Nutrition Technical
+Assistance, Washington, DC, 1999
+Rola AC, Jamias SB, Quizon JB (2002) Do farmer ﬁeld school graduates retain what they learn? J
+Int Agric Ext Educ 9(1):65–75
+Sikwela MM (2008) Determinants of household food security in the semi-arid areas of Zimbabwe:
+a case study of irrigation and non-irrigation farmers in Lupane and Hwange districts, MS
+thesis, University of Fort Hare, South Africa, 2008
+Sterman JD (2000) Business dynamics: systems thinking and modelling for a complex world.
+Irwin/McGraw Hill, New York
+Tey YS, Radam A (2010) Demand patterns of rice imports in Malaysia: implications for food
+security. Food Secur 3(2010):253–261
+USDA (1999) Food Security Assessment. USDA economic research service situation and outlook
+series GFA-11, Washington, DC, 1999
+Bibliography
+Bala BK (1999) Principles of system dynamics. Agrotech Publishing Academy, Udaipur
+Barlas Y (1996) Formal aspects of model validity and validation in system dynamics. Syst Dyn
+Rev 12:183–210
+Forrester JW (1968) Principles of systems. Wright-Allen Press, Cambridge, MA
+216
+10
+Modelling of Food Security in Malaysia
+
+=== PDF PAGE 227 ===
+Modelling of Supply Chain of Rice Milling
+Systems in Bangladesh
+11
+In the previous chapters, case studies on system dynamics modelling of boom and
+bust of cocoa production systems in Malaysia, modelling of hilsa ﬁsh population in
+Bangladesh and modelling of food security in Malaysia have been presented. This
+chapter presents the application of system dynamics modelling to supply chain of
+rice milling systems to demonstrate how to construct system dynamics models and
+simulate these models for policy planning and design. The model presented is an
+illustration of modelling and simulation of practical problem to provide manage-
+ment scenarios and policy options, and such experiences are essential to face the
+challenge of modelling and simulation of dynamic systems in practice. To achieve
+these goals, the model of this case study is organised as follows: (1) introduction,
+(2) dynamic hypothesis, (3) causal loop diagram, (4) stock–ﬂow diagram, (5) model
+validation, (6) simulation and policy analysis and (7) conclusion. The model is
+simulated to address supply chain management scenarios and design the policy
+options for efﬁcient and sustainable supply chain management of rice milling
+systems in Bangladesh to ensure the availability of rice to the consumers in an
+economic manner under uncertainty. The model has the potential to identify and
+study the critical components of the overall supply chain, allowing for the creation
+of an efﬁcient and sustainable network.
+11.1
+Introduction
+Rice is the staple food grain in Bangladesh, and it covers almost three quarters of
+the total cropped area in Bangladesh. Per capita consumption of rice in Bangladesh
+is one of the highest in the world and it is 188 kg (BBS 2011). The production of
+rice in Bangladesh has increased signiﬁcantly over last 40 years, and this success
+has been strongly related to high yielding varieties triggered by the liberalisation of
+key input markets such as irrigation and fertilisers (Ahmed 2000; Hossain 1988;
+Hossain et al. 2006). Although rice production has increased in the recent years
+with a self-sufﬁciency in rice food security, the availability of rice to consumers has
+# Springer Science+Business Media Singapore 2017
+B.K. Bala et al., System Dynamics, Springer Texts in Business and Economics,
+DOI 10.1007/978-981-10-2045-2_11
+217
+
