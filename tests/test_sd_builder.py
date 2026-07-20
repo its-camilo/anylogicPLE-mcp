@@ -92,3 +92,41 @@ class TestSDBuiler:
         out = xml(sd_builder.build_model(definition))
         assert out.find("<TableFunctions>") < out.find("<AgentLinks>")
         assert out.find("<AgentLinks>") < out.find("<Presentation>")
+
+    def test_simulation_experiment_has_parameters(self, sd_builder):
+        """AnyLogic NPE on open if SimulationExperiment lacks <Parameters>."""
+        definition = build_template("predator_prey", {})
+        out = xml(sd_builder.build_model(definition))
+        # Parameters must appear inside SimulationExperiment, before PresentationProperties
+        exp_idx = out.find("<SimulationExperiment")
+        assert exp_idx != -1
+        exp_end = out.find("</SimulationExperiment>", exp_idx)
+        exp_block = out[exp_idx:exp_end]
+        assert "<Parameters>" in exp_block
+        assert "</Parameters>" in exp_block
+        assert "<ParameterName><![CDATA[Area]]></ParameterName>" in exp_block
+        assert exp_block.find("<Parameters>") < exp_block.find("<PresentationProperties>")
+
+    def test_has_required_library_and_physical_dims(self, sd_builder):
+        definition = build_template("simple_stock_flow", {})
+        out = xml(sd_builder.build_model(definition))
+        assert "com.anylogic.libraries.modules.markup_descriptors" in out
+        assert "<RequiredLibraryReference>" in out
+        assert "<PhysicalLength" in out
+        assert "<LayoutTypeApplyOnStartup>true</LayoutTypeApplyOnStartup>" in out
+        assert "<NetworkTypeApplyOnStartup>true</NetworkTypeApplyOnStartup>" in out
+
+    def test_openable_structure_invariants(self, sd_builder):
+        """Structural checklist aligned with DES builder / Cocoa ground truth."""
+        for template in ("predator_prey", "simple_stock_flow", "food_security_malaysia"):
+            out = xml(sd_builder.build_from_template(template, {}))
+            for tag in (
+                "<AgentLinks>",
+                "<Parameters>",
+                "<BypassInitialScreen>true</BypassInitialScreen>",
+                "<ConvertersApplied>",
+                "<RequiredLibraryReference>",
+                "<PhysicalLength",
+            ):
+                assert tag in out, f"{template} missing {tag}"
+            ET.fromstring(out)
