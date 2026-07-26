@@ -1,4 +1,43 @@
-"""System Dynamics .alp XML builder for AnyLogic 8.9.x."""
+"""System Dynamics .alp XML builder for AnyLogic 8.9.x.
+
+Emits AnyLogic Workspace XML for pure SD models. Key fragments:
+
+**TableFunction** (lookup)::
+
+    <TableFunction AccessType="public" StaticFunction="false">
+      <Id>...</Id>
+      <Name><![CDATA[LynxMortality]]></Name>
+      <InterpolationMethod>LINEAR</InterpolationMethod>
+      <OutOfRangeBehaviour>EXTRAPOLATE</OutOfRangeBehaviour>  <!-- ERROR|EXTRAPOLATE|CUSTOM|CLAMP -->
+      <Argument><![CDATA[0]]></Argument>
+      <Value><![CDATA[0.5]]></Value>
+      ...
+    </TableFunction>
+
+**Links** (causal dependencies under ``<Dependences>``)::
+
+    <Link SourceId="111" TargetId="222" Polarity="null">
+      <Id>...</Id>
+      <Name><![CDATA[111-222]]></Name>
+      ...
+    </Link>
+
+**Control** (presentation slider when ``ui_control="slider"``)::
+
+    <Control Type="Slider">
+      <Id>...</Id>
+      <Name><![CDATA[slider_Area]]></Name>
+      <X>50</X><Y>400</Y>
+      <Width>150</Width><Height>40</Height>
+      <Minimum><![CDATA[20]]></Minimum>
+      <Maximum><![CDATA[500]]></Maximum>
+      <DefaultValue><![CDATA[100]]></DefaultValue>
+      <Link><![CDATA[Area]]></Link>
+      <Orientation>HORIZONTAL</Orientation>
+    </Control>
+
+Sliders are auto-positioned: ``x`` advances by 170px; a new row every 5 sliders.
+"""
 
 from __future__ import annotations
 
@@ -18,6 +57,7 @@ from .sd_schema import (
     TableFunctionDef,
     TimeUnit,
 )
+from .sd_templates import build_template
 
 _CHART_COLORS = [-10496, -6632142, -13434879, -16711936, -16776961]
 
@@ -169,6 +209,7 @@ def _parameter_xml(param: ParameterDef, var_id: int, x: int, y: int) -> str:
 
 
 def _table_function_xml(tf: TableFunctionDef, var_id: int, x: int, y: int) -> str:
+    """Build ``<TableFunction>`` with ordered ``<Argument>`` / ``<Value>`` pairs."""
     args = "\n".join(f"\t\t\t\t\t<Argument><![CDATA[{p.x}]]></Argument>" for p in tf.points)
     vals = "\n".join(f"\t\t\t\t\t<Value><![CDATA[{p.y}]]></Value>" for p in tf.points)
     return f"""\
@@ -197,6 +238,59 @@ def _table_function_xml(tf: TableFunctionDef, var_id: int, x: int, y: int) -> st
 {vals}
 				</TableFunction>
 """
+
+
+def _slider_control_xml(
+    param: ParameterDef,
+    control_id: int,
+    x: int,
+    y: int,
+) -> str:
+    """Build presentation ``<Control Type="Slider">`` linked to a parameter.
+
+    XML shape::
+
+        <Control Type="Slider">
+          ...
+          <Minimum>...</Minimum>
+          <Maximum>...</Maximum>
+          <DefaultValue>...</DefaultValue>
+          <Link><![CDATA[parameterName]]></Link>
+        </Control>
+    """
+    label = param.label or param.name
+    return f"""\
+					<Control Type="Slider">
+						<Id>{control_id}</Id>
+						<Name><![CDATA[slider_{param.name}]]></Name>
+						<X>{x}</X><Y>{y}</Y>
+						<Label><X>0</X><Y>-20</Y></Label>
+						<PublicFlag>true</PublicFlag>
+						<PresentationFlag>true</PresentationFlag>
+						<ShowLabel>true</ShowLabel>
+						<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+						<EmbeddedIcon>false</EmbeddedIcon>
+						<Width>150</Width>
+						<Height>40</Height>
+						<Minimum><![CDATA[{param.slider_min}]]></Minimum>
+						<Maximum><![CDATA[{param.slider_max}]]></Maximum>
+						<DefaultValue><![CDATA[{param.default}]]></DefaultValue>
+						<Link><![CDATA[{param.name}]]></Link>
+						<Orientation>HORIZONTAL</Orientation>
+						<Action><![CDATA[]]></Action>
+						<Caption><![CDATA[{label}]]></Caption>
+					</Control>
+"""
+
+
+def _slider_positions(count: int) -> List[Tuple[int, int]]:
+    """Auto-layout for presentation sliders: 5 per row, 170px horizontal step."""
+    positions: List[Tuple[int, int]] = []
+    for i in range(count):
+        col = i % 5
+        row = i // 5
+        positions.append((50 + col * 170, 400 + row * 70))
+    return positions
 
 
 def _link_xml(link_id: int, source_id: int, target_id: int, x: int, y: int) -> str:
@@ -421,13 +515,23 @@ class SDModelBuilder:
         for chart in charts:
             for i, series in enumerate(chart.series):
                 ds_id = ids.next()
-                color = _CHART_COLORS[i % len(_CHART_COLORS)]
+                color = (
+                    series.color
+                    if series.color is not None
+                    else _CHART_COLORS[i % len(_CHART_COLORS)]
+                )
                 datasets_xml += _dataset_expression(
                     i, series.title, series.expression, color, ds_id
                 )
         time_plot_xml = _time_plot(
             plot_id, rec_id, datasets_xml, definition.time_unit, definition.duration
         )
+
+        slider_params = [p for p in definition.parameters if p.ui_control == "slider"]
+        slider_xy = _slider_positions(len(slider_params))
+        controls_xml = ""
+        for param, (sx, sy) in zip(slider_params, slider_xy):
+            controls_xml += _slider_control_xml(param, ids.next(), sx, sy)
 
         unit_code = _time_unit_code(definition.time_unit)
         converters_xml = "\n".join(f"\t<Uuid>{u}</Uuid>" for u in _CONVERTER_UUIDS)
@@ -556,7 +660,7 @@ class SDModelBuilder:
 					<Z>0</Z>
 					<LevelVisibility>DIM_NON_CURRENT</LevelVisibility>
 				<Presentation>
-{time_plot_xml}				</Presentation>
+{time_plot_xml}{controls_xml}				</Presentation>
 				</Level>
 			</Presentation>
 		</ActiveObjectClass>
@@ -679,7 +783,6 @@ class SDModelBuilder:
         return xml.encode("utf-8")
 
     def build_from_template(self, template_name: str, params: Optional[dict] = None) -> bytes:
-        from .sd_templates import build_template
-
+        """Build from a named SD template (``predator_prey``, etc.)."""
         definition = build_template(template_name, params or {})
         return self.build_model(definition)

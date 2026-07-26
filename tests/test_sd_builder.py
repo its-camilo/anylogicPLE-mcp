@@ -130,3 +130,179 @@ class TestSDBuiler:
             ):
                 assert tag in out, f"{template} missing {tag}"
             ET.fromstring(out)
+
+
+class TestSliderControls:
+    def test_slider_control_xml_generated(self, sd_builder):
+        from anylogic_mcp.sd_schema import (
+            FlowDef,
+            LinkDef,
+            ParameterDef,
+            SDModelDefinition,
+            StockDef,
+        )
+
+        definition = SDModelDefinition(
+            name="SliderDemo",
+            description="Slider control demo",
+            duration=10,
+            parameters=[
+                ParameterDef(
+                    name="rate",
+                    default="5",
+                    slider_min=0,
+                    slider_max=10,
+                    ui_control="slider",
+                ),
+            ],
+            stocks=[StockDef(name="S", initial_value="1", expression="inflow")],
+            flows=[FlowDef(name="inflow", formula="rate", target="S")],
+            links=[
+                LinkDef(source="rate", target="inflow"),
+                LinkDef(source="inflow", target="S"),
+            ],
+        )
+        out = xml(sd_builder.build_model(definition))
+        assert 'Type="Slider"' in out
+        assert '<Control Type="Slider">' in out
+        assert "<Link><![CDATA[rate]]></Link>" in out
+        assert "<Minimum><![CDATA[0" in out
+        assert "<Maximum><![CDATA[10" in out
+
+    def test_slider_auto_layout_wraps_every_five(self, sd_builder):
+        from anylogic_mcp.sd_builder import _slider_positions
+
+        positions = _slider_positions(6)
+        assert positions[0] == (50, 400)
+        assert positions[4] == (50 + 4 * 170, 400)
+        assert positions[5] == (50, 470)
+
+    def test_predator_prey_emits_slider_controls(self, sd_builder):
+        out = xml(sd_builder.build_from_template("predator_prey", {}))
+        assert out.count('Type="Slider"') == 3
+        assert "<Link><![CDATA[Area]]></Link>" in out
+
+
+class TestRoundTrip:
+    def test_schema_to_xml_round_trip_identity(self, sd_builder):
+        """schema → XML → parse key elements and verify they match the schema."""
+        from anylogic_mcp.sd_schema import (
+            AuxDef,
+            ChartDef,
+            ChartSeriesDef,
+            FlowDef,
+            LinkDef,
+            ParameterDef,
+            SDModelDefinition,
+            StockDef,
+            TableFunctionDef,
+            TablePointDef,
+        )
+
+        definition = SDModelDefinition(
+            name="RoundTrip",
+            description="Round trip check",
+            time_unit="Month",
+            duration=24,
+            parameters=[
+                ParameterDef(
+                    name="k",
+                    default="2",
+                    slider_min=0,
+                    slider_max=5,
+                    ui_control="slider",
+                ),
+            ],
+            stocks=[StockDef(name="Level", initial_value="10", expression="flowIn")],
+            flows=[FlowDef(name="flowIn", formula="k * helper", target="Level")],
+            auxiliaries=[AuxDef(name="helper", formula="1")],
+            table_functions=[
+                TableFunctionDef(
+                    name="lookup",
+                    points=[TablePointDef(x=0, y=0), TablePointDef(x=1, y=1)],
+                    out_of_range="CLAMP",
+                ),
+            ],
+            links=[
+                LinkDef(source="k", target="flowIn"),
+                LinkDef(source="helper", target="flowIn"),
+                LinkDef(source="flowIn", target="Level"),
+            ],
+            charts=[
+                ChartDef(
+                    title="Level",
+                    series=[
+                        ChartSeriesDef(title="Level", expression="Level", color=-16776961),
+                    ],
+                )
+            ],
+        )
+        out = xml(sd_builder.build_model(definition))
+        root = ET.fromstring(out)
+
+        names = {
+            el.findtext("Name")
+            for el in root.iter("Variable")
+        }
+        assert "Level" in names
+        assert "flowIn" in names
+        assert "helper" in names
+        assert "k" in names
+
+        tf = root.find(".//TableFunction")
+        assert tf is not None
+        assert tf.findtext("Name") == "lookup"
+        assert tf.findtext("OutOfRangeBehaviour") == "CLAMP"
+        xs = [float(a.text) for a in tf.findall("Argument")]
+        ys = [float(v.text) for v in tf.findall("Value")]
+        assert xs == [0.0, 1.0]
+        assert ys == [0.0, 1.0]
+
+        control = root.find(".//Control[@Type='Slider']")
+        assert control is not None
+        assert control.findtext("Link") == "k"
+
+        expr2 = root.find(".//Expression2")
+        assert expr2 is not None
+        assert expr2.text == "Level"
+
+        assert root.findtext(".//ModelTimeUnit") == "Month"
+        assert root.findtext(".//FinalTime") == "24.0"
+
+        # Rebuild from dumped store dict and confirm identical structural fingerprint
+        store = definition.to_store_dict("rid")
+        rebuilt = SDModelDefinition(
+            name=store["name"],
+            description=store["description"],
+            time_unit=store["time_unit"],
+            duration=store["duration"],
+            stocks=store["system_dynamics"]["stocks"],
+            flows=store["system_dynamics"]["flows"],
+            auxiliaries=store["system_dynamics"]["auxiliaries"],
+            parameters=store["system_dynamics"]["parameters"],
+            table_functions=store["system_dynamics"]["table_functions"],
+            links=store["system_dynamics"]["links"],
+            charts=store["system_dynamics"]["charts"],
+        )
+        out2 = xml(sd_builder.build_model(rebuilt))
+        root2 = ET.fromstring(out2)
+
+        def fingerprint(r: ET.Element) -> tuple:
+            return (
+                sorted(
+                    (el.get("Class"), el.findtext("Name"))
+                    for el in r.iter("Variable")
+                ),
+                [
+                    (tf.findtext("Name"), tf.findtext("OutOfRangeBehaviour"))
+                    for tf in r.iter("TableFunction")
+                ],
+                [
+                    (c.findtext("Link"), c.findtext("Minimum"), c.findtext("Maximum"))
+                    for c in r.iter("Control")
+                ],
+                [e.text for e in r.iter("Expression2")],
+            )
+
+        assert fingerprint(root) == fingerprint(root2)
+

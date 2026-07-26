@@ -3,16 +3,18 @@
 import asyncio
 import os
 import json
+import uuid
 from pathlib import Path
 from typing import Any
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent
+from pydantic import ValidationError
 
 from .ple_validator import PLEValidator, ModelSimplifier, PLELimits
 from .model_builder import AnyLogicModelBuilder, ModelDefinition
 from .sd_builder import SDModelBuilder
-from .sd_schema import SDModelDefinition
+from .sd_schema import SDModelDefinition, SDSchemaError, format_issue
 from .sd_validator import SDValidator
 from .sd_templates import build_template
 from .cloud_client import AnyLogicCloudClient
@@ -189,7 +191,27 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Return the JSON Schema and usage notes for System Dynamics model definitions. "
                 "Use before anylogic_create_sd_model_ple to understand the explicit schema "
-                "(stocks, flows, auxiliaries, parameters, table_functions, links, charts)."
+                "(stocks, flows, auxiliaries, parameters with optional ui_control='slider', "
+                "table_functions, links, charts).\n\n"
+                "Example follow-up payload for anylogic_create_sd_model_ple:\n"
+                "{\n"
+                '  "name": "Inventory",\n'
+                '  "description": "Simple stock-flow",\n'
+                '  "sd_model": {\n'
+                '    "time_unit": "Month",\n'
+                '    "duration": 60,\n'
+                '    "parameters": [\n'
+                '      {"name": "restockRate", "default": "50", '
+                '"slider_min": 0, "slider_max": 100, "ui_control": "slider"}\n'
+                "    ],\n"
+                '    "stocks": [{"name": "Inventory", "initial_value": "200"}],\n'
+                '    "flows": [\n'
+                '      {"name": "restocking", "formula": "restockRate", "target": "Inventory"}\n'
+                "    ],\n"
+                '    "links": [{"source": "restockRate", "target": "restocking"}, '
+                '{"source": "restocking", "target": "Inventory"}]\n'
+                "  }\n"
+                "}"
             ),
             inputSchema={
                 "type": "object",
@@ -200,12 +222,26 @@ async def list_tools() -> list[Tool]:
             name="anylogic_create_sd_model_ple",
             description=(
                 "Create a PLE-compliant AnyLogic System Dynamics model from an explicit schema. "
-                "Supports stocks, flows, auxiliaries, parameters, table functions, causal links, "
-                "and TimePlot charts. Max 200 SD variables. "
+                "Supports stocks, flows, auxiliaries, parameters (ui_control slider), "
+                "table functions (sorted X, EXTRAPOLATE/CLAMP/ERROR/CUSTOM), causal links, "
+                "and TimePlot charts. Max 200 SD variables "
+                "(stocks+flows+auxiliaries+parameters+table_functions). "
+                "Validation failures return JSON objects with error/field/suggestion. "
                 "Pure SD models do not use the Process Modeling Library; PLE applies a ~5-hour "
                 "wall-clock simulation guidance at 1:1 animation speed. "
                 "Use template for built-in models: predator_prey, simple_stock_flow, "
-                "food_security_malaysia."
+                "food_security_malaysia.\n\n"
+                "Minimal custom example:\n"
+                "{\n"
+                '  "name": "Demo",\n'
+                '  "description": "One stock",\n'
+                '  "sd_model": {\n'
+                '    "duration": 10,\n'
+                '    "stocks": [{"name": "S", "initial_value": "1", "expression": "inflow"}],\n'
+                '    "flows": [{"name": "inflow", "formula": "1", "target": "S"}],\n'
+                '    "links": [{"source": "inflow", "target": "S"}]\n'
+                "  }\n"
+                "}"
             ),
             inputSchema={
                 "type": "object",
@@ -236,7 +272,8 @@ async def list_tools() -> list[Tool]:
                         "description": (
                             "Explicit System Dynamics definition. Required when template is omitted. "
                             "Fields: time_unit, duration, stocks[], flows[], auxiliaries[], "
-                            "parameters[], table_functions[], links[], charts[]. "
+                            "parameters[] (optional ui_control='slider', slider_min, slider_max), "
+                            "table_functions[], links[], charts[]. "
                             "Call anylogic_get_sd_schema for the full JSON Schema."
                         )
                     }
@@ -279,6 +316,59 @@ async def call_tool(name: str, arguments: Any) -> list[TextContent]:
 # ---------------------------------------------------------------------------
 # SD helpers
 # ---------------------------------------------------------------------------
+
+def _issues_from_exception(exc: BaseException) -> list[dict[str, str]]:
+    """Normalize schema/semantic failures into MCP-friendly issue dicts."""
+    if isinstance(exc, SDSchemaError):
+        return exc.to_dict_list()
+
+    cause = getattr(exc, "__cause__", None) or getattr(exc, "__context__", None)
+    if isinstance(cause, SDSchemaError):
+        return cause.to_dict_list()
+
+    if isinstance(exc, ValidationError):
+        issues: list[dict[str, str]] = []
+        for err in exc.errors():
+            raw = (err.get("ctx") or {}).get("error")
+            if isinstance(raw, SDSchemaError):
+                issues.extend(raw.to_dict_list())
+                continue
+            if isinstance(raw, BaseException):
+                nested = _issues_from_exception(raw)
+                if nested and nested[0]["error"] != str(raw):
+                    issues.extend(nested)
+                    continue
+            loc = ".".join(str(x) for x in err.get("loc", ())) or "model"
+            msg = err.get("msg", str(exc))
+            # Strip pydantic's "Value error, " prefix when present
+            if msg.startswith("Value error, "):
+                msg = msg[len("Value error, "):]
+            issues.append(
+                format_issue(
+                    msg,
+                    loc,
+                    "Fix this field and call anylogic_get_sd_schema if unsure.",
+                )
+            )
+        return issues or [
+            format_issue(str(exc), "model", "Call anylogic_get_sd_schema for schema details.")
+        ]
+
+    return [
+        format_issue(
+            str(exc),
+            "model",
+            "Call anylogic_get_sd_schema for schema details.",
+        )
+    ]
+
+
+def _format_issues_block(title: str, issues: list[dict[str, str]]) -> str:
+    lines = [title]
+    for issue in issues:
+        lines.append(json.dumps(issue, ensure_ascii=False))
+    return "\n".join(lines)
+
 
 def _build_model_bytes(model_data: dict) -> bytes:
     """Build .alp bytes for a stored model (DES or SD)."""
@@ -332,7 +422,6 @@ async def create_model_ple(args: dict) -> list[TextContent]:
     model_name = args['name']
     model_desc = args['description']
 
-    import uuid
     model_id = str(uuid.uuid4())
 
     if model_type == 'custom':
@@ -719,16 +808,45 @@ Required top-level fields when not using a template:
   name, description, time_unit, duration, stocks, flows, links
 
 Variable types:
-  stocks[]       - {name, initial_value, expression?}
+  stocks[]       - {name, initial_value (numeric literal), expression?}
   flows[]        - {name, formula, source?, target?}  (omit source/target for cloud)
   auxiliaries[]  - {name, formula}
-  parameters[]   - {name, default, label?, slider_min?, slider_max?}
-  table_functions[] - {name, points[{x,y}], interpolation?, out_of_range?}
-  links[]        - {source, target}  (explicit causal links, required)
-  charts[]       - {title, series[{title, expression}]}  (optional; defaults to stocks)
+  parameters[]   - {name, default, label?, slider_min?, slider_max?, ui_control?}
+                   ui_control: "slider" emits <Control Type="Slider"> linked via <Link>
+                   default must lie in [slider_min, slider_max] when range is set
+  table_functions[] - {name, points[{x,y}] (sorted unique X), interpolation?, out_of_range?}
+                   out_of_range: ERROR | EXTRAPOLATE | CUSTOM | CLAMP
+  links[]        - {source, target}  (endpoints must exist; algebraic cycles rejected)
+  charts[]       - {title, series[{title, expression, color?}]}  (series Expression2 must exist)
+
+Validations:
+  - Java-safe names [a-zA-Z_][a-zA-Z0-9_]*
+  - Duplicate names rejected
+  - Formula identifiers must reference declared variables
+  - Unused auxiliaries produce warnings
+  - Variable count = stocks+flows+auxiliaries+parameters+table_functions (max 200)
 
 Templates (pass as template=):
   predator_prey, simple_stock_flow, food_security_malaysia
+
+Example (custom with slider):
+{
+  "name": "Inventory",
+  "description": "Stock with restock slider",
+  "sd_model": {
+    "time_unit": "Month",
+    "duration": 60,
+    "parameters": [
+      {"name": "restockRate", "default": "50", "slider_min": 0, "slider_max": 100, "ui_control": "slider"}
+    ],
+    "stocks": [{"name": "Inventory", "initial_value": "200"}],
+    "flows": [{"name": "restocking", "formula": "restockRate", "target": "Inventory"}],
+    "links": [
+      {"source": "restockRate", "target": "restocking"},
+      {"source": "restocking", "target": "Inventory"}
+    ]
+  }
+}
 
 Workflow:
   1. anylogic_get_sd_schema  (this tool)
@@ -741,8 +859,6 @@ Workflow:
 
 async def create_sd_model_ple(args: dict) -> list[TextContent]:
     """Create a PLE-compliant System Dynamics model."""
-    import uuid
-
     model_name = args['name']
     model_desc = args['description']
     model_id = str(uuid.uuid4())
@@ -751,8 +867,8 @@ async def create_sd_model_ple(args: dict) -> list[TextContent]:
     template_params['name'] = model_name
     template_params['description'] = model_desc
 
-    errors: list[str] = []
-    warnings: list[str] = []
+    errors: list[dict[str, str]] = []
+    warnings: list[dict[str, str]] = []
 
     try:
         if template:
@@ -761,12 +877,15 @@ async def create_sd_model_ple(args: dict) -> list[TextContent]:
         else:
             sd_payload = args.get('sd_model')
             if not sd_payload:
+                issue = format_issue(
+                    "Provide either 'template' or 'sd_model'",
+                    "sd_model",
+                    "Call anylogic_get_sd_schema for the full schema, or set template="
+                    "'predator_prey'|'simple_stock_flow'|'food_security_malaysia'.",
+                )
                 return [TextContent(
                     type="text",
-                    text=(
-                        "Error: provide either 'template' or 'sd_model'. "
-                        "Call anylogic_get_sd_schema for the full schema."
-                    ),
+                    text=_format_issues_block("SD Model Creation Failed", [issue]),
                 )]
             sd_payload = {**sd_payload, 'name': model_name, 'description': model_desc}
             sd_def = SDModelDefinition.model_validate(sd_payload)
@@ -778,27 +897,22 @@ async def create_sd_model_ple(args: dict) -> list[TextContent]:
         warnings.extend(sd_semantic.warnings)
 
         model_def = sd_def.to_store_dict(model_id)
-        model_def['system_dynamics']['charts'] = (
-            [c.model_dump() for c in sd_def.charts] if sd_def.charts else None
-        )
 
         validation = validator.validate_model(model_def)
         if not validation.is_valid:
-            errors.extend(validation.errors)
-        warnings.extend(validation.warnings)
+            for err in validation.errors:
+                errors.append(format_issue(err, "ple_limits", "Reduce model size to fit PLE limits."))
+        for warn in validation.warnings:
+            warnings.append(format_issue(warn, "ple_limits", "Consider shortening duration or simplifying."))
 
         if errors:
             response = f"""SD Model Creation Failed: {model_name}
 {'=' * 60}
 
-Errors:
+{_format_issues_block("Errors (JSON):", errors)}
 """
-            for err in errors:
-                response += f"  • {err}\n"
             if warnings:
-                response += "\nWarnings:\n"
-                for warn in warnings:
-                    response += f"  • {warn}\n"
+                response += "\n" + _format_issues_block("Warnings (JSON):", warnings) + "\n"
             return [TextContent(type="text", text=response)]
 
         model_bytes = sd_builder.build_model(sd_def)
@@ -827,9 +941,7 @@ Limits Usage:
             response_text += f"  • {key.replace('_', ' ').title()}: {value}\n"
 
         if warnings:
-            response_text += "\nWarnings:\n"
-            for warning in warnings:
-                response_text += f"  • {warning}\n"
+            response_text += "\n" + _format_issues_block("Warnings (JSON):", warnings) + "\n"
 
         response_text += (
             f"\nThis model is ready for AnyLogic PLE.\n\nNext steps:\n"
@@ -839,9 +951,14 @@ Limits Usage:
         return [TextContent(type="text", text=response_text)]
 
     except Exception as e:
+        issues = _issues_from_exception(e)
         return [TextContent(
             type="text",
-            text=f"SD model validation failed: {e}\n\nCall anylogic_get_sd_schema for schema details.",
+            text=(
+                f"SD model validation failed: {model_name}\n"
+                f"{'=' * 60}\n\n"
+                f"{_format_issues_block('Errors (JSON):', issues)}\n"
+            ),
         )]
 
 

@@ -46,13 +46,21 @@ def _predator_prey(params: dict[str, Any]) -> SDModelDefinition:
         time_unit="Year",
         duration=float(params.get("duration", 100)),
         parameters=[
-            ParameterDef(name="Area", default="100", label="Area", slider_min=20, slider_max=500),
+            ParameterDef(
+                name="Area",
+                default="100",
+                label="Area",
+                slider_min=20,
+                slider_max=500,
+                ui_control="slider",
+            ),
             ParameterDef(
                 name="HareNatality",
                 default="1.25",
                 label="Hare natality",
                 slider_min=0.25,
                 slider_max=3.0,
+                ui_control="slider",
             ),
             ParameterDef(
                 name="LynxNatality",
@@ -60,6 +68,7 @@ def _predator_prey(params: dict[str, Any]) -> SDModelDefinition:
                 label="Lynx natality",
                 slider_min=0.1,
                 slider_max=0.5,
+                ui_control="slider",
             ),
         ],
         stocks=[

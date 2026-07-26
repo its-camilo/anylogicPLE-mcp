@@ -16,7 +16,7 @@ Unlike most tools that focus on a single modeling approach, AnyLogic supports th
 
 If you are an industrial engineer, this tool lets you prototype a queuing or process model in natural language and have something running within minutes — skipping the initial friction of block wiring and XML quirks, and getting straight to the questions that matter: utilization rates, bottlenecks, throughput.
 
-The current version handles **discrete event / queueing models** and **system dynamics models** (stocks, flows, auxiliaries, parameters, table functions, causal links). Resource-constrained DES models (shift schedules, breakdowns, Seize/Release blocks) are not yet supported — that is where contributions are most welcome.
+The current version handles **discrete event / queueing models** and **system dynamics models** (stocks, flows, auxiliaries, parameters with optional `ui_control` sliders, table functions with ordered points / out-of-range behaviour, causal links with cycle detection, TimePlot charts). Resource-constrained DES models (shift schedules, breakdowns, Seize/Release blocks) are not yet supported — that is where contributions are most welcome.
 
 ---
 
@@ -133,9 +133,54 @@ What are the AnyLogic PLE limits?
 
 | Template | Description |
 |---|---|
-| `predator_prey` | Classic lynx–hare predator-prey model |
+| `predator_prey` | Classic lynx–hare predator-prey model (with presentation sliders) |
 | `simple_stock_flow` | Single-stock inventory with inflow/outflow |
 | `food_security_malaysia` | Rice food security in Malaysia (Bala et al., Ch. 10) |
+
+#### Supported SD features
+
+| Feature | Notes |
+|---|---|
+| Stocks / flows / auxiliaries | Java-safe names; duplicate names rejected |
+| Parameters | `default`, optional `slider_min`/`slider_max`, optional `ui_control: "slider"` |
+| Presentation sliders | When `ui_control: "slider"`, emits `<Control Type="Slider">` with `<Link>` and auto layout (5 per row) |
+| Table functions | Points sorted by ascending unique X; `out_of_range`: ERROR, EXTRAPOLATE, CUSTOM, CLAMP |
+| Causal links | Endpoints must exist; algebraic cycles among auxiliaries/flows are rejected |
+| TimePlot charts | ≥1 series; `Expression2` must reference declared variables; optional ARGB `color` |
+| PLE variable cap | stocks + flows + auxiliaries + parameters + table functions ≤ 200 |
+
+#### Example: SD model with a slider
+
+```json
+{
+  "name": "Inventory",
+  "description": "Stock with restock slider",
+  "sd_model": {
+    "time_unit": "Month",
+    "duration": 60,
+    "parameters": [
+      {
+        "name": "restockRate",
+        "default": "50",
+        "slider_min": 0,
+        "slider_max": 100,
+        "ui_control": "slider"
+      }
+    ],
+    "stocks": [{ "name": "Inventory", "initial_value": "200" }],
+    "flows": [
+      { "name": "restocking", "formula": "restockRate", "target": "Inventory" }
+    ],
+    "links": [
+      { "source": "restockRate", "target": "restocking" },
+      { "source": "restocking", "target": "Inventory" }
+    ]
+  }
+}
+```
+
+Validation failures return MCP-friendly JSON objects with `error`, `field`, and `suggestion`
+(for example when a formula references an unknown variable).
 
 Custom DES models (any entity name, any block chain) and custom SD models (explicit `sd_model` schema) are fully supported.
 See [EXAMPLES.md](EXAMPLES.md) for prompts covering manufacturing, service systems, healthcare, and system dynamics.
@@ -180,7 +225,8 @@ See [EXAMPLES.md](EXAMPLES.md) for prompts covering manufacturing, service syste
 
 `model_builder.py` produces AnyLogic 8.9.8-compatible `.alp` XML for **discrete event** models.
 `sd_builder.py` produces the same format for **system dynamics** models (stocks, flows, auxiliaries,
-parameters, table functions, causal links, TimePlot charts).
+parameters, table functions, causal links, TimePlot charts, and optional `<Control Type="Slider">`
+presentation controls).
 
 The DES block ItemNames (e.g. Source = `1412336242928`) were extracted from a ground-truth AnyLogic file.
 SD variable XML follows the same dialect as AnyLogic 8.9.x sample models (Cocoa Malaysia, Predator Prey).
