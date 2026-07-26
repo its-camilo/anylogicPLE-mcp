@@ -6,17 +6,16 @@ Use these prompts in Claude Code after installing the MCP server and creating `.
 
 ## System Dynamics
 
-### Food Security Malaysia (Bala et al., Ch. 10)
-```
-Create the Food Security Malaysia system dynamics model.
-Use template food_security_malaysia with a 50-year simulation horizon.
-Validate PLE compliance and download the .alp file.
-```
-
 ### Predator-prey
 ```
 Create a predator-prey SD model using template predator_prey.
 100-year horizon. Download the .alp file.
+```
+
+### Simple stock-flow
+```
+Create a simple stock-flow inventory model using template simple_stock_flow.
+60-month horizon. Download the .alp file.
 ```
 
 ### Custom SD model
