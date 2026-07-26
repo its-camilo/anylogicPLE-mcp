@@ -44,17 +44,20 @@ class TestSDBuiler:
         assert "<![CDATA[Inventory]]>" in out
 
     def test_year_time_unit(self, sd_builder):
-        definition = build_template("food_security_malaysia", {})
+        definition = build_template("predator_prey", {})
         out = xml(sd_builder.build_model(definition))
         assert "<ModelTimeUnit><![CDATA[Year]]></ModelTimeUnit>" in out
-        assert "<FinalTime><![CDATA[50.0]]></FinalTime>" in out
+        assert "<FinalTime><![CDATA[100.0]]></FinalTime>" in out
 
     def test_unique_ids(self, sd_builder):
-        definition = build_template("food_security_malaysia", {})
+        definition = build_template("predator_prey", {})
         out = xml(sd_builder.build_model(definition))
         import re
         ids = re.findall(r"<Id>(\d+)</Id>", out)
-        assert len(ids) == len(set(ids))
+        # ParameterEditor uses fixed Id 0 (AnyLogic convention); ignore those duplicates
+        nonzero = [i for i in ids if i != "0"]
+        assert len(nonzero) == len(set(nonzero))
+        assert len(nonzero) > 10
 
     def test_build_from_template(self, sd_builder):
         out = xml(sd_builder.build_from_template("predator_prey", {}))
@@ -88,7 +91,7 @@ class TestSDBuiler:
         assert "<BypassInitialScreen>true</BypassInitialScreen>" in out
 
     def test_agent_links_before_presentation(self, sd_builder):
-        definition = build_template("food_security_malaysia", {})
+        definition = build_template("predator_prey", {})
         out = xml(sd_builder.build_model(definition))
         assert out.find("<TableFunctions>") < out.find("<AgentLinks>")
         assert out.find("<AgentLinks>") < out.find("<Presentation>")
@@ -117,8 +120,8 @@ class TestSDBuiler:
         assert "<NetworkTypeApplyOnStartup>true</NetworkTypeApplyOnStartup>" in out
 
     def test_openable_structure_invariants(self, sd_builder):
-        """Structural checklist aligned with DES builder / Cocoa ground truth."""
-        for template in ("predator_prey", "simple_stock_flow", "food_security_malaysia"):
+        """Structural checklist aligned with DES builder / AnyLogic ground truth."""
+        for template in ("predator_prey", "simple_stock_flow"):
             out = xml(sd_builder.build_from_template(template, {}))
             for tag in (
                 "<AgentLinks>",

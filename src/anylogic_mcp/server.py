@@ -229,8 +229,7 @@ async def list_tools() -> list[Tool]:
                 "Validation failures return JSON objects with error/field/suggestion. "
                 "Pure SD models do not use the Process Modeling Library; PLE applies a ~5-hour "
                 "wall-clock simulation guidance at 1:1 animation speed. "
-                "Use template for built-in models: predator_prey, simple_stock_flow, "
-                "food_security_malaysia.\n\n"
+                "Use template for built-in models: predator_prey, simple_stock_flow.\n\n"
                 "Minimal custom example:\n"
                 "{\n"
                 '  "name": "Demo",\n'
@@ -258,8 +257,7 @@ async def list_tools() -> list[Tool]:
                         "type": "string",
                         "enum": [
                             "predator_prey",
-                            "simple_stock_flow",
-                            "food_security_malaysia"
+                            "simple_stock_flow"
                         ],
                         "description": "Optional built-in SD template (overrides sd_model if set)"
                     },
@@ -404,7 +402,7 @@ def _build_model_bytes(model_data: dict) -> bytes:
         return builder.build_model(definition)
 
     if model_data['type'] in (
-        'predator_prey', 'simple_stock_flow', 'food_security_malaysia'
+        'predator_prey', 'simple_stock_flow'
     ):
         return sd_builder.build_from_template(model_data['type'], model_def)
 
@@ -827,7 +825,7 @@ Validations:
   - Variable count = stocks+flows+auxiliaries+parameters+table_functions (max 200)
 
 Templates (pass as template=):
-  predator_prey, simple_stock_flow, food_security_malaysia
+  predator_prey, simple_stock_flow
 
 Example (custom with slider):
 {
@@ -881,7 +879,7 @@ async def create_sd_model_ple(args: dict) -> list[TextContent]:
                     "Provide either 'template' or 'sd_model'",
                     "sd_model",
                     "Call anylogic_get_sd_schema for the full schema, or set template="
-                    "'predator_prey'|'simple_stock_flow'|'food_security_malaysia'.",
+                    "'predator_prey'|'simple_stock_flow'.",
                 )
                 return [TextContent(
                     type="text",

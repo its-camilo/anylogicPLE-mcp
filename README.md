@@ -38,9 +38,8 @@ Claude calls the MCP tools, builds the `.alp` XML, saves the file to your output
 For **System Dynamics**, use the SD tools:
 
 ```
-Create the Food Security Malaysia model from Bala et al. Ch. 10.
-Use template food_security_malaysia, 50-year horizon.
-Give me the .alp file.
+Create a predator-prey SD model using template predator_prey.
+100-year horizon. Give me the .alp file.
 ```
 
 Claude calls `anylogic_create_sd_model_ple`, validates the schema, and writes a stock-flow `.alp` with TimePlot charts.
@@ -135,7 +134,6 @@ What are the AnyLogic PLE limits?
 |---|---|
 | `predator_prey` | Classic lynx–hare predator-prey model (with presentation sliders) |
 | `simple_stock_flow` | Single-stock inventory with inflow/outflow |
-| `food_security_malaysia` | Rice food security in Malaysia (Bala et al., Ch. 10) |
 
 #### Supported SD features
 
@@ -229,7 +227,7 @@ parameters, table functions, causal links, TimePlot charts, and optional `<Contr
 presentation controls).
 
 The DES block ItemNames (e.g. Source = `1412336242928`) were extracted from a ground-truth AnyLogic file.
-SD variable XML follows the same dialect as AnyLogic 8.9.x sample models (Cocoa Malaysia, Predator Prey).
+SD variable XML follows the same dialect as AnyLogic 8.9.x sample models (e.g. Predator Prey).
 
 Key DES invariants:
 
@@ -258,8 +256,7 @@ Key DES invariants:
 │   ├── test_ple_validator.py
 │   ├── test_sd_schema.py
 │   ├── test_sd_builder.py
-│   ├── test_sd_templates.py
-│   └── test_food_security_malaysia.py
+│   └── test_sd_templates.py
 └── pyproject.toml
 ```
 
